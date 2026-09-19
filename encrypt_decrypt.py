@@ -46,25 +46,36 @@ def decrypt_message(ciphertext: bytes, string_key: str, salt: bytes, nonce: byte
 
 # End of AI CODES
 
+salt = ""
+nonce = ""
+
 def encrypt_button_clicked():
-    print("Encrypt button clicked")
-    print(text_to_encrypt.get("1.0", END).strip())
-    print(chk_encrypt.instate(['selected']))
-    print(secret_key.get("1.0", END).strip())
+    global salt, nonce
+    message = text_to_encrypt.get("1.0", END).strip()
+    key = secret_key.get("1.0", END).strip()
+    ciphertext, salt, nonce = encrypt_message(message, key)
+    encrypted_text.delete("1.0", END)
+    encrypted_text.insert("1.0", ciphertext.hex())
 
 def decrypt_button_clicked():
-    print("Decrypt button clicked")
-    print(text_to_decrypt.get("1.0", END).strip())
-    print(chk_decrypt.instate(['selected']))
-    print(secret_key_decrypt.get("1.0", END).strip())
+    global salt, nonce
+    ciphertext = bytes.fromhex(encrypted_text.get("1.0", END).strip())
+    key = secret_key_decrypt.get("1.0", END).strip()
+    # # Note: In a real application, you would need to retrieve the salt and nonce from storage
+    # # For this example, we'll assume they are available
+    # salt = b''  # Replace with actual salt
+    # nonce = b''  # Replace with actual nonce
+    decrypted_message = decrypt_message(ciphertext, key, salt, nonce)
+    decrypted_text.delete("1.0", END)
+    decrypted_text.insert("1.0", decrypted_message)
 
 def copy_encrypted():
-    print("Copy encrypted text")
-    print(encrypted_text.get("1.0", END).strip())
+    window.clipboard_clear()
+    window.clipboard_append(encrypted_text.get("1.0", END).strip())
 
 def copy_decrypted():
-    print("Copy decrypted text")
-    print(decrypted_text.get("1.0", END).strip())
+    window.clipboard_clear()
+    window.clipboard_append(decrypted_text.get("1.0", END).strip())
 
 window = Tk()
 window.title("Encrypt/Decrypt")
