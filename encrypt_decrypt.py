@@ -1,6 +1,51 @@
 from tkinter import *
 from tkinter import ttk
 
+# AI CODES
+
+import os
+from cryptography.hazmat.primitives.ciphers.aead import AESGCM
+from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+from cryptography.hazmat.primitives import hashes
+
+def derive_key(string_key: str, salt: bytes) -> bytes:
+    """Derives a secure 256-bit key from a string password using PBKDF2."""
+    kdf = PBKDF2HMAC(
+        algorithm=hashes.SHA256(),
+        length=32,  # 32 bytes = 256 bits
+        salt=salt,
+        iterations=100_000,
+    )
+    return kdf.derive(string_key.encode('utf-8'))
+
+def encrypt_message(message: str, string_key: str) -> tuple[bytes, bytes, bytes]:
+    """Encrypts a string message using AES-256-GCM."""
+    # Generate random unique salt and nonce (Initialization Vector)
+    salt = os.urandom(16)
+    nonce = os.urandom(12)
+    
+    # Derive the 256-bit binary key from the string key
+    key = derive_key(string_key, salt)
+    
+    # Encrypt the plaintext
+    aesgcm = AESGCM(key)
+    ciphertext = aesgcm.encrypt(nonce, message.encode('utf-8'), None)
+    
+    # You must store or transmit the salt and nonce alongside the ciphertext
+    return ciphertext, salt, nonce
+
+def decrypt_message(ciphertext: bytes, string_key: str, salt: bytes, nonce: bytes) -> str:
+    """Decrypts the ciphertext back into a string message."""
+    # Derive the exact same key using the same salt and password
+    key = derive_key(string_key, salt)
+    
+    # Decrypt and decode back to a string
+    aesgcm = AESGCM(key)
+    decrypted_bytes = aesgcm.decrypt(nonce, ciphertext, None)
+    return decrypted_bytes.decode('utf-8')
+
+# End of AI CODES
+
 def encrypt_button_clicked():
     print("Encrypt button clicked")
     print(text_to_encrypt.get("1.0", END).strip())
