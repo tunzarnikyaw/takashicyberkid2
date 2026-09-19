@@ -1,6 +1,26 @@
 from tkinter import *
 from tkinter import ttk
 
+def encrypt_button_clicked():
+    print("Encrypt button clicked")
+    print(text_to_encrypt.get("1.0", END).strip())
+    print(chk_encrypt.instate(['selected']))
+    print(secret_key.get("1.0", END).strip())
+
+def decrypt_button_clicked():
+    print("Decrypt button clicked")
+    print(text_to_decrypt.get("1.0", END).strip())
+    print(chk_decrypt.instate(['selected']))
+    print(secret_key_decrypt.get("1.0", END).strip())
+
+def copy_encrypted():
+    print("Copy encrypted text")
+    print(encrypted_text.get("1.0", END).strip())
+
+def copy_decrypted():
+    print("Copy decrypted text")
+    print(decrypted_text.get("1.0", END).strip())
+
 window = Tk()
 window.title("Encrypt/Decrypt")
 
@@ -36,10 +56,10 @@ ttk.Label(frame2, text="Enter secret key:").grid(row=4, column=0, sticky=W)
 secret_key_decrypt = Text(frame2, width=30, height=1)
 secret_key_decrypt.grid(row=5, column=0, padx=5, pady=5)
 
-btn_encrypt = ttk.Button(frame1, text="Encrypt")
+btn_encrypt = ttk.Button(frame1, text="Encrypt", command=encrypt_button_clicked)
 btn_encrypt.grid(row=6, column=0, pady=5)
 
-btn_decrypt = ttk.Button(frame2, text="Decrypt")
+btn_decrypt = ttk.Button(frame2, text="Decrypt", command=decrypt_button_clicked)
 btn_decrypt.grid(row=6, column=0, pady=5)
 
 frame3 = ttk.LabelFrame(frame, text="Encrypted Output", padding=10)
@@ -54,10 +74,10 @@ encrypted_text.grid(row=0, column=0, padx=5, pady=5)
 decrypted_text = Text(frame4, width=30, height=5)
 decrypted_text.grid(row=0, column=0, padx=5, pady=5)
 
-btn_copy_encrypted = ttk.Button(frame3, text="Copy")
+btn_copy_encrypted = ttk.Button(frame3, text="Copy", command=copy_encrypted)
 btn_copy_encrypted.grid(row=1, column=0, pady=5)
 
-btn_copy_decrypted = ttk.Button(frame4, text="Copy")
+btn_copy_decrypted = ttk.Button(frame4, text="Copy", command=copy_decrypted)
 btn_copy_decrypted.grid(row=1, column=0, pady=5)
 
 window.mainloop()
